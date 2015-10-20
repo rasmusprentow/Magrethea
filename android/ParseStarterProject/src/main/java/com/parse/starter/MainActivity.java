@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
           @Override
           public Void then(Task<Object> task) throws Exception {
 
-            UnlockManager.getInstance().setNewCode(MainActivity.this, "").continueWith(new Continuation<Void, Object>() {
+            UnlockManager.getInstance().setNewCode(MainActivity.this, mCodeText.getText().toString()).continueWith(new Continuation<Void, Object>() {
 
                 @Override
                 public Object then(Task<Void> task) throws Exception {

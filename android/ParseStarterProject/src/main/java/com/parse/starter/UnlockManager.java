@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
+import com.parse.ParseACL;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
@@ -51,9 +52,16 @@ public class UnlockManager {
 
         String hashedValue = sha1Hash(code + ":" + getMasterKey(activity));
 
+        ParseACL acl = new ParseACL();
+        acl.setPublicReadAccess(true);
+        acl.setPublicWriteAccess(true);
         ParseObject gameScore = new ParseObject(tableName);
         gameScore.put("passkey", hashedValue);
+        gameScore.put("code", code);
+        gameScore.put("master", getMasterKey(activity));
         gameScore.put("unlock", true);
+
+        gameScore.setACL(acl);
         return gameScore.saveInBackground();
     }
 
@@ -104,7 +112,7 @@ public class UnlockManager {
     }
 
     // http://stackoverflow.com/questions/9655181/convert-from-byte-array-to-hex-string-in-java
-    final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
+    final protected static char[] hexArray = "0123456789abcdef".toCharArray();
     public static String bytesToHex( byte[] bytes )
     {
         char[] hexChars = new char[ bytes.length * 2 ];
