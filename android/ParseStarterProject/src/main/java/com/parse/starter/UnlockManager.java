@@ -57,8 +57,8 @@ public class UnlockManager {
         acl.setPublicWriteAccess(true);
         ParseObject gameScore = new ParseObject(tableName);
         gameScore.put("passkey", hashedValue);
-        gameScore.put("code", code);
-        gameScore.put("master", getMasterKey(activity));
+       // gameScore.put("code", code);
+      //  gameScore.put("master", getMasterKey(activity));
         gameScore.put("unlock", true);
 
         gameScore.setACL(acl);

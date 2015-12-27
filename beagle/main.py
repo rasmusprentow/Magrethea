@@ -1,6 +1,6 @@
 
 
-import requests, json, hashlib; 
+import requests, json, hashlib, random, time, sys; 
 
 
 # curl -X POST \
@@ -17,33 +17,70 @@ headers = {
   "Content-Type": "application/json"
 }
 
-
-url =  "https://api.parse.com/1/classes/Unlock"
+urlUnlock =  "https://api.parse.com/1/classes/Unlock"
 
 masterKey = "fgggggg"
 code = "1234"
 
-result = requests.get(url, headers=headers)
-print(json.loads(result.text))
-challenge =  (json.loads(result.text)[u"results"][0][u"passkey"])
+random.seed(); 
 
-print (challenge)
 
-print("\n")
 
-original = code + ":" + masterKey
-m = hashlib.sha1();
-m.update(original)
+def sendChallenge(challenge): 
+	url =  "https://api.parse.com/1/classes/Challenge/mFMlLIAtXH"
+	
 
-originalHashed = m.hexdigest()
+	data = { 'challenge': challenge, }
+	print (requests.put(url, headers=headers, data=json.dumps(data)).text)
 
-print(originalHashed)
+	return challenge
 
-print("\n")
+def generateResponse(challenge):
+	
+	original = code + ":" + masterKey + ":" + challenge
+	m = hashlib.sha1();
+	m.update(original)
+	originalHashed = m.hexdigest()
 
-canBeUnlocked = originalHashed == challenge;
+	print(originalHashed)
 
-if canBeUnlocked:
-  print("Can be opened")
-else:
-  print("Cannot Be opened")
+	print("\n")
+	return originalHashed
+
+
+def generateChallenge(): 
+	challenge = random.randint(0, sys.maxint)
+	return str(challenge);
+
+
+def unlockUsingChallenge(challenge):
+	canBeUnlocked = False
+
+	while not canBeUnlocked: 
+	
+		result = requests.get(urlUnlock, headers=headers)
+		print(json.loads(result.text))
+		response =  (json.loads(result.text)[u"results"][0][u"passkey"])
+
+		challengeExncryped = generateResponse(challenge)
+		print ('response '  + response)
+
+		print ('challengeEncrypted '  + challengeExncryped)
+
+	
+
+		
+	
+		
+
+		canBeUnlocked = challengeExncryped == response;
+
+		if canBeUnlocked:
+		  print("Can be opened")
+		else:
+		  print("Cannot Be opened")
+
+		time.sleep(5)
+
+
+unlockUsingChallenge( sendChallenge( generateChallenge()));

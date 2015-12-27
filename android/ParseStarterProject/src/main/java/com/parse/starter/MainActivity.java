@@ -50,9 +50,9 @@ public class MainActivity extends Activity {
     setContentView(R.layout.activity_main);
 
 
-    mUnlockButton = (Button) findViewById(R.id.unlock_button);
-    mCodeText = (EditText) findViewById(R.id.codeEditText);
-    mMasterKeyText = (EditText) findViewById(R.id.masterKeyEditText);
+      mUnlockButton = (Button) findViewById(R.id.unlock_button);
+      mCodeText = (EditText) findViewById(R.id.codeEditText);
+      mMasterKeyText = (EditText) findViewById(R.id.masterKeyEditText);
       mMasterKeyLabel = (TextView) findViewById(R.id.masterKeyTextView);
 
       hideIfMasterKeySet();
